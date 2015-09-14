@@ -48,7 +48,8 @@ public class DAOClientImpl implements DAOClient {
     /**
      * The constant SELECT_MEMOS.
      */
-    private static final String SELECT_MEMOS = "SELECT * FROM MEMOS order by 1 LIMIT ? OFFSET ?";
+    private static final String SELECT_MEMOS =
+            "SELECT * FROM MEMOS order by 1 LIMIT ? OFFSET ?";
     /**
      * The constant EXIST_MEMO.
      */
@@ -171,8 +172,9 @@ public class DAOClientImpl implements DAOClient {
      * @return the all memos
      */
     @Override
-    public List<Memo> getAllMemos(int pageNo, int limit) {
-        List<Map<String, Object>> rows = jdbcTemplate.queryForList(SELECT_MEMOS, limit, (pageNo - 1) * limit);
+    public List<Memo> getAllMemos(final int pageNo, final int limit) {
+        List<Map<String, Object>> rows =
+                jdbcTemplate.queryForList(SELECT_MEMOS, limit, (pageNo - 1) * limit);
         List<Memo> memos = newArrayList();
         for (Map<String, Object> row : rows) {
             memos.add(adaptMemo(row));
@@ -188,11 +190,13 @@ public class DAOClientImpl implements DAOClient {
      *
      * @return the all memos
      */
-    public MemoPage getMemosForPage(int pageNo, int limit) {
+    public MemoPage getMemosForPage(final int pageNo, final int limit) {
         MemoPage response = new MemoPage();
-        List<Map<String, Object>> rows = jdbcTemplate.queryForList(SELECT_MEMOS, limit, (pageNo - 1) * limit);
+        List<Map<String, Object>> rows =
+                jdbcTemplate.queryForList(SELECT_MEMOS, limit, (pageNo - 1) * limit);
         if (isEmpty(rows)) {
-            throw new DataNotFoundException("No memos found for requested page parameters.");
+            throw new DataNotFoundException(
+                    "No memos found for requested page parameters.");
         }
 
         List<Memo> memos = newArrayList();

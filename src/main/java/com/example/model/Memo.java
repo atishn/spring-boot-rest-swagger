@@ -55,22 +55,4 @@ public class Memo implements Serializable {
     @NotEmpty(message = "Memo Text cannot be null or empty.")
     private String text;
 
-    /**
-     * Gets author.
-     *
-     * @return the author
-     */
-    public String getAuthor() {
-        return author;
-    }
-
-    /**
-     * Sets author.
-     *
-     * @param author the author
-     */
-    public void setAuthor(final String author) {
-        this.author = author;
-    }
-
 }

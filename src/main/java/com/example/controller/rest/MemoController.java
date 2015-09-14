@@ -76,8 +76,8 @@ public class MemoController {
      * Create a new Memo.
      *
      * @param memo the request
-     * @param req     the req
-     * @param resp    the resp
+     * @param req  the req
+     * @param resp the resp
      *
      * @return Response Message
      */
@@ -164,7 +164,7 @@ public class MemoController {
             String next = null;
             if (pageResponse.getPrevPageNumber() != null) {
                 prev = req.getRequestURL()
-                        +"?page=" + pageResponse.getPrevPageNumber() + "&limit=" + limit;
+                        + "?page=" + pageResponse.getPrevPageNumber() + "&limit=" + limit;
             }
 
             if (pageResponse.getNextPageNumber() != null) {
@@ -186,18 +186,17 @@ public class MemoController {
      *
      * @param id      the id
      * @param request the request
-     *
-     * @return Response Message
      */
     @RequestMapping(value = URI_BY_ID, method = RequestMethod.PUT, consumes = {JSON, XML},
             produces = {JSON, XML})
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseBody
     @ApiOperation(value = "Update Memo", notes = "Update a Memo")
     final void updateMemo(@ApiParam(value = "The ID of the existing memo resource.")
                           @PathVariable final Long id,
                           @ApiParam(value = "The memo request body.")
                           @RequestBody @Valid final Memo request) {
-        if (request.getId() != null && id != request.getId()) {
+        if (request.getId() != null && request.getId().equals(id)) {
             throw new InvalidDataException("Requested Memo ID not matching with Body.");
         } else {
             request.setId(id);
@@ -209,11 +208,10 @@ public class MemoController {
      * Delete the Memo.
      *
      * @param id the id
-     *
-     * @return Response Message
      */
     @RequestMapping(value = URI_BY_ID, method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseBody
     @ApiOperation(value = "Delete the Memo", notes = "Delete a Memo")
     final void deleteMemo(@ApiParam(value = "The ID of the existing memo resource.")
                           @PathVariable final Long id) {

@@ -21,7 +21,7 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <java.version>1.7</java.version>
+    <java.version>1.8</java.version>
   </properties>
 
   <dependencies>
@@ -92,20 +92,9 @@
     </dependency>
 
     <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-csv</artifactId>
-      <version>1.1</version>
-    </dependency>
-
-    <dependency>
       <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
       <version>9.4-1201-jdbc41</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.springframework.ws</groupId>
-      <artifactId>spring-ws-core</artifactId>
     </dependency>
 
     <dependency>
@@ -142,35 +131,35 @@
       <version>18.0</version>
     </dependency>
 
-      <dependency>
-          <groupId>com.fasterxml.jackson.core</groupId>
-          <artifactId>jackson-core</artifactId>
-          <version>2.6.1</version>
-      </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-core</artifactId>
+      <version>2.6.1</version>
+    </dependency>
 
-      <dependency>
-          <groupId>com.fasterxml.jackson.core</groupId>
-          <artifactId>jackson-databind</artifactId>
-          <version>2.6.1</version>
-      </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>2.6.1</version>
+    </dependency>
 
-      <dependency>
-          <groupId>com.fasterxml.jackson.core</groupId>
-          <artifactId>jackson-annotations</artifactId>
-          <version>2.6.1</version>
-      </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-annotations</artifactId>
+      <version>2.6.1</version>
+    </dependency>
 
-      <dependency>
-          <groupId>com.fasterxml.jackson.dataformat</groupId>
-          <artifactId>jackson-dataformat-xml</artifactId>
-          <version>2.6.1</version>
-      </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.dataformat</groupId>
+      <artifactId>jackson-dataformat-xml</artifactId>
+      <version>2.6.1</version>
+    </dependency>
 
-      <dependency>
-          <groupId>org.skyscreamer</groupId>
-          <artifactId>jsonassert</artifactId>
-          <version>1.2.3</version>
-      </dependency>
+    <dependency>
+      <groupId>org.skyscreamer</groupId>
+      <artifactId>jsonassert</artifactId>
+      <version>1.2.3</version>
+    </dependency>
 
   </dependencies>
 
@@ -223,7 +212,10 @@
           </execution>
         </executions>
       </plugin>
-
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+      </plugin>
       <!-- Validation Plugins -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -288,7 +280,6 @@
       <activation>
         <activeByDefault>true</activeByDefault>
       </activation>
-
       <properties>
         <packaging.type>jar</packaging.type>
       </properties>
@@ -299,7 +290,6 @@
       <properties>
         <packaging.type>war</packaging.type>
       </properties>
-
       <dependencies>
         <dependency>
           <groupId>org.springframework.boot</groupId>

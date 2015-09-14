@@ -5,6 +5,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.web.SpringBootServletInitializer;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
  * Memos Boot application configuration and main class.
@@ -12,6 +13,7 @@ import org.springframework.boot.context.web.SpringBootServletInitializer;
 @SpringBootApplication
 @EnableSwagger
 @EnableAutoConfiguration
+@EnableScheduling
 public class MemoBootApplication extends SpringBootServletInitializer {
 
     /**
