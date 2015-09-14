@@ -1,5 +1,9 @@
 # This workspace belongs to Memos REST Endpoints.
 
+
+## Latest Deployed endpoint.
+http://test-example-memo.elasticbeanstalk.com/
+
 ## Stack
  1. Maven 3 (`brew install maven`)
  2. Java 8 ([download site](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html))
@@ -16,6 +20,7 @@
  2. This application is being built with TDD approach. Integration tests were considered during Test Driven development.
  3. This application also covers with Unit Tests with Mocks. But due to time limit, Unit Tests are not as rich as Integration Tests.
  4. REST Endpoints supports JSON and XML content response types.
+
 
 
 ## Supported Endpoint
