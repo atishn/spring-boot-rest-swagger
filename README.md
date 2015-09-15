@@ -12,7 +12,7 @@ http://test-example-memo.elasticbeanstalk.com/
 
 ## Build Steps
  1. build and test `mvn clean install`
- 2. run server `java -jar .build/rest-0.0.1-SNAPSHOT.jar `
+ 2. run server `java -jar target/rest-0.0.1-SNAPSHOT.jar`
  3. Visit http://localhost:8080/api to see supported API. It has inbuilt REST client for testing the endpoints. Click on Try it Out! when done with ready with Request Params.
 
 ## Notes:
