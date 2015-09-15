@@ -59,7 +59,7 @@ For REST Based clients.
  1. Install [IntelliJ Ultimate](https://www.jetbrains.com/idea/download/). IT can provide a license.
  2. Install Lombok and Sprint Boot plugins (IntelliJ > Preferences > Plugins)
  3. Install checkstyle-idea plugins (IntelliJ > Preferences > Plugins)
- 4. To run/debug the app from IDE, select TRUBootApplication class, right-click and run or debug.
+ 4. To run/debug the app from IDE, select MemoBootApplication class, right-click and run or debug.
 
 ## Steps and Scripts for Continuous Delivery(Jenkins) Pipeline.
  1. Code Compile. `mvn clean compile`
