@@ -83,7 +83,8 @@ public class Memo implements Serializable {
      */
     @PrePersist
     protected void onCreate() {
-        updated = created = new Date();
+        created = new Date();
+        updated = created;
     }
 
     /**

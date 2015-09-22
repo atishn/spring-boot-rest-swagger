@@ -194,7 +194,8 @@ public class MemoController {
                           @ApiParam(value = "The memo request body.")
                           @RequestBody @Valid final Memo request) {
         if (request.getId() != null && !request.getId().equals(id)) {
-            throw new InvalidDataException("Requested Memo ID from Url not matching with Body.");
+            throw new InvalidDataException(
+                    "Requested Memo ID from Url not matching with Body.");
         } else {
             request.setId(id);
         }

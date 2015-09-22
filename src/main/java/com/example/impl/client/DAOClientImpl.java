@@ -38,6 +38,7 @@ public class DAOClientImpl implements DAOClient {
      * Create memo.
      *
      * @param request the request
+     *
      * @return the memo
      */
     @Override
@@ -49,8 +50,8 @@ public class DAOClientImpl implements DAOClient {
                 return resp;
             }
             throw new MemoRestException("Memo did not get created.");
-        } catch (DataIntegrityViolationException | TransactionSystemException |
-                ConstraintViolationException ex) {
+        } catch (DataIntegrityViolationException | TransactionSystemException
+                | ConstraintViolationException ex) {
             throw new InvalidDataException(ex.getMessage());
         }
     }
@@ -60,6 +61,7 @@ public class DAOClientImpl implements DAOClient {
      * Delete memo.
      *
      * @param id the id
+     *
      * @return the boolean
      */
     @Override
@@ -76,6 +78,7 @@ public class DAOClientImpl implements DAOClient {
      * Gets memo.
      *
      * @param id the id
+     *
      * @return the memo
      */
     @Override
@@ -91,6 +94,7 @@ public class DAOClientImpl implements DAOClient {
      * Exists memo.
      *
      * @param id the id
+     *
      * @return the boolean
      */
     @SuppressWarnings("deprecation")
@@ -103,7 +107,8 @@ public class DAOClientImpl implements DAOClient {
      * Gets all memos.
      *
      * @param pageNo the page no
-     * @param limit the limit
+     * @param limit  the limit
+     *
      * @return the all memos
      */
     @Override
@@ -124,7 +129,8 @@ public class DAOClientImpl implements DAOClient {
      * Gets all memos by pagination.
      *
      * @param pageNo the page no
-     * @param limit the limit
+     * @param limit  the limit
+     *
      * @return the all memos
      */
     public MemoPage getMemosForPage(final int pageNo, final int limit) {
@@ -167,6 +173,7 @@ public class DAOClientImpl implements DAOClient {
      * Update memo.
      *
      * @param memo the memo
+     *
      * @return the boolean
      */
     @Override
@@ -189,7 +196,7 @@ public class DAOClientImpl implements DAOClient {
     /**
      * Patch memo.
      *
-     * @param id the id
+     * @param id     the id
      * @param fields the fields
      */
     @Override
