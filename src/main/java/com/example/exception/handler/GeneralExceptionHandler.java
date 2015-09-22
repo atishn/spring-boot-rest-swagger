@@ -7,6 +7,7 @@ import com.example.exception.MemoRestException;
 import com.example.model.ErrorResponse;
 import com.example.model.ServiceResponse;
 import org.slf4j.Logger;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -94,10 +95,10 @@ public class GeneralExceptionHandler {
     ServiceResponse<String, String, ErrorResponse> handleMemoException(
             final InvalidDataException ex, final HttpServletRequest req,
             final HttpServletResponse resp) {
-        resp.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+        resp.setStatus(HttpStatus.BAD_REQUEST.value());
         ErrorResponse error = new ErrorResponse();
-        error.setCode(valueOf(HttpStatus.NOT_FOUND.value()));
-        error.setTitle("Invalid Data.");
+        error.setCode(valueOf(HttpStatus.BAD_REQUEST.value()));
+        error.setTitle("Invalid Request Data.");
         error.setDetail(ex.getMessage());
         error.setLink(req.getRequestURL().toString());
 
@@ -187,5 +188,29 @@ public class GeneralExceptionHandler {
         return new ServiceResponse(null, null, error);
     }
 
+
+    /**
+     * Method to DAO Empty DataResult exceptions.
+     *
+     * @param ex exception thrown
+     * @param req the req
+     * @param resp response
+     * @return ResponseEntity service response
+     */
+    @ExceptionHandler(EmptyResultDataAccessException.class)
+    @ResponseBody
+    ServiceResponse<String, String, ErrorResponse> handleEmptyDataException(
+            final EmptyResultDataAccessException ex, final HttpServletRequest req,
+            final HttpServletResponse resp) {
+
+        resp.setStatus(HttpStatus.NOT_FOUND.value());
+        ErrorResponse error = new ErrorResponse();
+        error.setCode(valueOf(HttpStatus.NOT_FOUND.value()));
+        error.setTitle("No entry exists for that given request.");
+        error.setLink(req.getRequestURL().toString());
+        error.setDetail(ex.getMessage());
+
+        return new ServiceResponse(null, null, error);
+    }
 
 }

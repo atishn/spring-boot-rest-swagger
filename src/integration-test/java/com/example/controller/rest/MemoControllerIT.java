@@ -13,9 +13,8 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.jdbc.SqlGroup;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -41,12 +40,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = MemoBootApplication.class)
 @WebAppConfiguration
-@TestPropertySource(locations = {"classpath:config/integrationTest.properties"})
-@SqlGroup({
-        @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts =
-                "classpath:/scripts/setup-teardown.sql"),
-        @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts =
-                "classpath:/scripts/setup-teardown.sql")})
+@ActiveProfiles("integration")
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class MemoControllerIT {
 
     /**
@@ -243,6 +238,32 @@ public class MemoControllerIT {
 
 
     /**
+     * Test update memos bad data.
+     *
+     * @throws Exception the exception
+     */
+    @Test
+    public void testUpdateMemosBadData() throws Exception {
+
+        // Test for JSON Happy Path
+        createNewTestMemo();
+
+        // Update the Resource with invalid memo id.
+        mvc.perform(put(MemoController.V1_PREFIX + MemoController.MEMO + "/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+
+                .characterEncoding("UTF-8")
+                .content("{\"title\":\"updated title\"," +
+                        "\"id\":2222," +
+                        "\"text\":\"updated text\"," +
+                        "\"author\":\"updated author\"}"))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(containsString("Requested Memo ID from Url not matching with Body"))).andReturn();
+
+    }
+
+    /**
      * Test Get memos as a list without Pagination params.
      *
      * @throws Exception the exception
@@ -261,7 +282,7 @@ public class MemoControllerIT {
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("\"id\":1")))
                 .andExpect(content().string(containsString("\"totalRecords\":20")))
-                .andExpect(content().string(containsString("\"next\":\"http://localhost/data/1/memo?page=2&limit=10\"")))
+                .andExpect(content().string(containsString("\"next\":\"http://localhost/data/1/memo?page=1&limit=10\"")))
                 .andReturn();
     }
 
@@ -279,24 +300,24 @@ public class MemoControllerIT {
             createNewTestMemo();
         }
 
-        mvc.perform(get(MemoController.V1_PREFIX + MemoController.MEMO + "?page=1&limit=10")
+        mvc.perform(get(MemoController.V1_PREFIX + MemoController.MEMO + "?page=0&limit=10")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("\"id\":1")))
                 .andExpect(content().string(containsString("\"totalRecords\":20")))
                 .andExpect(content().string(containsString("\"prev\":null")))
-                .andExpect(content().string(containsString("\"next\":\"http://localhost/data/1/memo?page=2&limit=10\"")))
+                .andExpect(content().string(containsString("\"next\":\"http://localhost/data/1/memo?page=1&limit=10\"")))
                 .andReturn();
 
-        mvc.perform(get(MemoController.V1_PREFIX + MemoController.MEMO + "?page=2&limit=10")
+        mvc.perform(get(MemoController.V1_PREFIX + MemoController.MEMO + "?page=1&limit=10")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("\"id\":11")))
                 .andExpect(content().string(containsString("\"totalRecords\":20")))
                 .andExpect(content().string(containsString("\"next\":null")))
-                .andExpect(content().string(containsString("\"prev\":\"http://localhost/data/1/memo?page=1&limit=10\"")))
+                .andExpect(content().string(containsString("\"prev\":\"http://localhost/data/1/memo?page=0&limit=10\"")))
                 .andReturn();
     }
 
@@ -326,7 +347,7 @@ public class MemoControllerIT {
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().string(containsString("Page number should be equals or greater than 1")));
+                .andExpect(content().string(containsString("Page number should be equals or greater than 0")));
 
         mvc.perform(get(MemoController.V1_PREFIX + MemoController.MEMO + "?page=1&limit=-10")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -379,7 +400,7 @@ public class MemoControllerIT {
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
-                .andExpect(content().string(containsString("Memo with Id : 1233345 does not exists")));
+                .andExpect(content().string(containsString("No entry exists for that given request.")));
     }
 
     /**

@@ -21,7 +21,7 @@ public class MemoPage implements Serializable {
     /**
      * The Total memos size.
      */
-    private Integer totalMemosSize;
+    private Long totalMemosSize;
 
     /**
      * The Total page size.

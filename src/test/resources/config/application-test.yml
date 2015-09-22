@@ -1,0 +1,11 @@
+server:
+    contextPath: /api
+
+spring.datasource:
+    driverClassName: org.h2.Driver
+    url: jdbc:h2:mem:bootexample;MODE=MySQL
+
+spring.jpa:
+    dialect: org.hibernate.dialect.H2Dialect
+    hibernate.ddl-auto: create-drop
+

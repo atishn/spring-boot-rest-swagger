@@ -17,8 +17,8 @@ http://test-example-memo.elasticbeanstalk.com/
 
 ## Notes:
  1. This application is being built using Spring-Boot Java Stack(Inbuilt TomCat. No Installation needed).
- 2. This application is being built with TDD approach. Integration tests were considered during Test Driven development.
- 3. This application also covers with Unit Tests with Mocks. But due to time limit, Unit Tests are not as rich as Integration Tests.
+ 2. This application is being built with TDD approach. Unit & Integration tests were considered during Test Driven development.
+ 3. Intgeration Tests deals with live data base while Unit Tests deals with Mocks and Embedded DB.
  4. REST Endpoints supports JSON and XML content response types.
 
 
@@ -71,8 +71,5 @@ For REST Based clients.
 
 
 ## Future Improvements.
- 1. Introduce Unit Tests to DAO Layers.
- 2. Introduce Embedded DB Systems like H2DB for DAO Unit Tests
- 3. Introduce ORM to get Database Independance and Portability.
- 4. Introduce code coverage tool like Jacoco to maintain code coverage.
- 5. Add Jmeter profile to src/test/jmeter and configure the job in the pipeline.
+ 1. Introduce code coverage tool like Jacoco to maintain code coverage.
+ 2. Add Jmeter profile to src/test/jmeter and configure the job in the pipeline.

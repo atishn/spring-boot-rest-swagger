@@ -5,6 +5,7 @@ import com.example.api.client.DAOClient;
 import com.example.exception.DataNotFoundException;
 import com.example.exception.InvalidDataException;
 import com.example.model.Memo;
+import com.example.model.MemoPage;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.junit.Rule;
@@ -14,19 +15,18 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.jdbc.SqlGroup;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -35,12 +35,8 @@ import static org.junit.Assert.assertTrue;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = MemoBootApplication.class)
 @WebAppConfiguration
-@TestPropertySource(locations = {"classpath:config/integrationTest.properties"})
-@SqlGroup({
-        @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts =
-                "classpath:/scripts/setup-teardown.sql"),
-        @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, scripts =
-                "classpath:/scripts/setup-teardown.sql")})
+@ActiveProfiles("integration")
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class DAOClientIT {
 
     /**
@@ -88,6 +84,7 @@ public class DAOClientIT {
         memo.setTitle("Some title");
 
         exception.expect(InvalidDataException.class);
+
         Memo createdMemo = daoClient.createMemo(memo);
         assertNotNull("Memo did not get created", createdMemo);
     }
@@ -98,14 +95,17 @@ public class DAOClientIT {
      */
     @Test
     public void deleteMemoTestValid() {
-        jdbcTemplate.update("INSERT INTO MEMOS (ID, TITLE, AUTHOR, TEXT) VALUES (10," +
-                "'title test','author test','random test text')");
 
-        daoClient.deleteMemo(10L);
+        Memo memo = new Memo();
+        memo.setTitle("Some title");
+        memo.setAuthor("Some author");
+        memo.setText("Some text");
+        Memo createdMemo = daoClient.createMemo(memo);
+        assertTrue(daoClient.getCount() == 1);
 
-        Long count = jdbcTemplate.queryForObject("SELECT COUNT(1) FROM MEMOS", Long
-                .class);
-        assertEquals(0L, count.longValue());
+        daoClient.deleteMemo(createdMemo.getId());
+
+        assertTrue("Memo didnt get deleted", daoClient.getCount() == 0);
     }
 
     /**
@@ -122,11 +122,15 @@ public class DAOClientIT {
      */
     @Test
     public void getMemoTestValid() {
-        jdbcTemplate.update("INSERT INTO MEMOS (ID, TITLE, AUTHOR, TEXT) VALUES (10," +
-                "'title test','author test','random test text')");
-        Memo memo = daoClient.getMemo(10L);
+        Memo memo = new Memo();
+        memo.setTitle("Some title");
+        memo.setAuthor("Some author");
+        memo.setText("Some text");
+        Memo createdMemo = daoClient.createMemo(memo);
+
+        memo = daoClient.getMemo(createdMemo.getId());
         assertNotNull("No memo found for given Id", memo);
-        assertTrue("Id not matching", memo.getId() == 10L);
+        assertTrue("Id not matching", memo.getId() == 1L);
     }
 
     /**
@@ -143,18 +147,21 @@ public class DAOClientIT {
      */
     @Test
     public void existsMemoTestValid() {
-        jdbcTemplate.update("INSERT INTO MEMOS (ID, TITLE, AUTHOR, TEXT) VALUES (10," +
-                "'title test','author test','random test text')");
-        assertTrue(daoClient.existsMemo(10L));
+        Memo memo = new Memo();
+        memo.setTitle("Some title");
+        memo.setAuthor("Some author");
+        memo.setText("Some text");
+        Memo createdMemo = daoClient.createMemo(memo);
+
+
+        assertTrue(daoClient.existsMemo(createdMemo.getId()));
     }
 
     /**
-     * Exists memo test 2.
+     * Exists memo test Invalid Id.
      */
     @Test
-    public void existsMemoTest2() {
-        jdbcTemplate.update("INSERT INTO MEMOS (ID, TITLE, AUTHOR, TEXT) VALUES (10," +
-                "'title test','author test','random test text')");
+    public void existsMemoTestForInvalid() {
         assertFalse(daoClient.existsMemo(3L));
     }
 
@@ -163,31 +170,49 @@ public class DAOClientIT {
      */
     @Test
     public void getAllMemosTestValid() {
-        jdbcTemplate.update("INSERT INTO MEMOS (ID, TITLE, AUTHOR, TEXT) VALUES (1," +
-                "'title test','author test','random test text')");
-        jdbcTemplate.update("INSERT INTO MEMOS (ID, TITLE, AUTHOR, TEXT) VALUES (2," +
-                "'title test','author test','random test text')");
 
-        List<Memo> list = daoClient.getAllMemos(1, 2);
-        assertNotNull(list);
-        assertEquals(2, list.size());
-        Iterator<Memo> ite = list.iterator();
-
-        long count = 0L;
-        while (ite.hasNext()) {
-            Memo memo = ite.next();
-            count += memo.getId();
+        for (int i = 0; i < 20; i++) {
+            Memo memo = new Memo();
+            memo.setTitle("Some title " + i);
+            memo.setAuthor("Some author " + i);
+            memo.setText("Some text " + i);
+            daoClient.createMemo(memo);
         }
-        assertEquals(3, count);
+
+        List<Memo> list = daoClient.getAllMemos(0, 10);
+        assertNotNull(list);
+        assertEquals(10, list.size());
     }
 
     /**
      * Gets all memos test not valid.
      */
     @Test
-    public void getAllMemosTestNotValid() {
-        List<Memo> list = daoClient.getAllMemos(1, 2);
-        assertNotNull(list);
-        assertEquals(0, list.size());
+    public void getMemosForPageValid() {
+
+        for (int i = 0; i < 20; i++) {
+            Memo memo = new Memo();
+            memo.setTitle("Some title " + i);
+            memo.setAuthor("Some author " + i);
+            memo.setText("Some text " + i);
+            daoClient.createMemo(memo);
+        }
+
+        MemoPage page = daoClient.getMemosForPage(0, 10);
+        assertNotNull(page);
+        assertTrue(1 == page.getNextPageNumber());
+        assertNull(page.getPrevPageNumber());
+        assertTrue(2 == page.getTotalPages());
+        assertTrue(20 == page.getTotalMemosSize());
+    }
+
+
+    /**
+     * Gets memo test invalid.
+     */
+    @Test
+    public void getMemosForPageInValid() {
+        exception.expect(DataNotFoundException.class);
+        daoClient.getMemosForPage(10, 10);
     }
 }

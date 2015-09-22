@@ -22,7 +22,7 @@ public class Pagination implements Serializable {
     /**
      * The Prev.
      */
-    private int totalRecords;
+    private Long totalRecords;
 
     /**
      * The Prev.

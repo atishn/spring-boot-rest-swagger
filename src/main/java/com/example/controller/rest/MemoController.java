@@ -76,9 +76,8 @@ public class MemoController {
      * Create a new Memo.
      *
      * @param memo the request
-     * @param req  the req
+     * @param req the req
      * @param resp the resp
-     *
      * @return Response Message
      */
     @RequestMapping(method = RequestMethod.POST, consumes = {JSON, XML},
@@ -104,7 +103,6 @@ public class MemoController {
      * Get a Memo by Id.
      *
      * @param id the id
-     *
      * @return Response Message
      */
     @RequestMapping(value = URI_BY_ID, method = RequestMethod.GET, produces = {JSON, XML})
@@ -122,10 +120,9 @@ public class MemoController {
     /**
      * Get list of all Memos.
      *
-     * @param page  the page
+     * @param page the page
      * @param limit the limit
-     * @param req   the req
-     *
+     * @param req the req
      * @return Response Message
      */
     @RequestMapping(method = RequestMethod.GET, produces = {JSON, XML})
@@ -133,16 +130,16 @@ public class MemoController {
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Get List of Memos", notes = "Get Memos")
     final ServiceResponse<Memo[], Pagination, String> getMemos(
-            @ApiParam(value = "The page number.", required = false, defaultValue = "1")
-            @RequestParam(defaultValue = "1", required = false) final int page,
+            @ApiParam(value = "The page number.", required = false, defaultValue = "0")
+            @RequestParam(defaultValue = "0", required = false) final int page,
             @ApiParam(value = "Results per page.", required = false, defaultValue = "10")
             @RequestParam(defaultValue = "10", required = false) final int limit,
             final HttpServletRequest req) {
 
         // Validates incoming params.
-        if (page < 1) {
+        if (page < 0) {
             throw new InvalidArgumentException(
-                    "Page number should be equals or greater than 1");
+                    "Page number should be equals or greater than 0");
         }
 
         if (limit < 1) {
@@ -184,7 +181,7 @@ public class MemoController {
     /**
      * Update the Memo.
      *
-     * @param id      the id
+     * @param id the id
      * @param request the request
      */
     @RequestMapping(value = URI_BY_ID, method = RequestMethod.PUT, consumes = {JSON, XML},
@@ -196,8 +193,8 @@ public class MemoController {
                           @PathVariable final Long id,
                           @ApiParam(value = "The memo request body.")
                           @RequestBody @Valid final Memo request) {
-        if (request.getId() != null && request.getId().equals(id)) {
-            throw new InvalidDataException("Requested Memo ID not matching with Body.");
+        if (request.getId() != null && !request.getId().equals(id)) {
+            throw new InvalidDataException("Requested Memo ID from Url not matching with Body.");
         } else {
             request.setId(id);
         }

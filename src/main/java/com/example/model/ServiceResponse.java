@@ -13,9 +13,9 @@ import java.io.Serializable;
  * Generic Wrapper class for REST Responses.
  * User: anarlawar
  *
- * @param <R>  the type parameter
- * @param <P>  the type parameter
- * @param <E>  the type parameter
+ * @param <R> the type parameter
+ * @param <P> the type parameter
+ * @param <E> the type parameter
  */
 
 @Data

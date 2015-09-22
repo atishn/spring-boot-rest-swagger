@@ -1,0 +1,12 @@
+server:
+    contextPath: /api
+
+spring.datasource:
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://test.cnq1ut9lazvj.us-east-1.rds.amazonaws.com:5432/memo
+    username: memo
+    password: memouser
+
+spring.jpa:
+    dialect: org.hibernate.dialect.PostgreSQL9Dialect
+    hibernate.ddl-auto: update

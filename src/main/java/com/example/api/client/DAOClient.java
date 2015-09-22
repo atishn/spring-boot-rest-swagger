@@ -15,7 +15,6 @@ public interface DAOClient {
      * Create a new memo and persist it.
      *
      * @param request the request
-     *
      * @return the memo
      */
     Memo createMemo(Memo request);
@@ -24,7 +23,6 @@ public interface DAOClient {
      * Delete a memo given its identifier.
      *
      * @param id Memo identifier
-     *
      * @return the boolean
      */
     boolean deleteMemo(Long id);
@@ -33,7 +31,6 @@ public interface DAOClient {
      * Retrieve a memo given its identifier.
      *
      * @param id Memo identifier
-     *
      * @return memo requested
      */
     Memo getMemo(Long id);
@@ -42,7 +39,6 @@ public interface DAOClient {
      * Check if there is a memo with the given identifier.
      *
      * @param id Memo identifier
-     *
      * @return true if the memo exists or false otherwise
      */
     boolean existsMemo(Long id);
@@ -51,8 +47,7 @@ public interface DAOClient {
      * Retrieve all memos from the persistent storage unit.
      *
      * @param pageNo the page no
-     * @param limit  the limit
-     *
+     * @param limit the limit
      * @return List with all memos
      */
     List<Memo> getAllMemos(int pageNo, int limit);
@@ -61,18 +56,23 @@ public interface DAOClient {
      * Gets memos with pagination.
      *
      * @param pageNo the page no
-     * @param limit  the limit
-     *
+     * @param limit the limit
      * @return the memos for page
      */
     MemoPage getMemosForPage(int pageNo, int limit);
+
+    /**
+     * Gets count.
+     *
+     * @return the count
+     */
+    Integer getCount();
 
     /**
      * Update all fields of a memo given a Memo object. memo.id will be used to look up
      * for it on the persistent storage unit.
      *
      * @param memo Model object with all fields to be updated
-     *
      * @return the boolean
      */
     boolean updateMemo(final Memo memo);
@@ -80,7 +80,7 @@ public interface DAOClient {
     /**
      * Update given fields from memo given its identifier and fields to update.
      *
-     * @param id     Memo identifier
+     * @param id Memo identifier
      * @param fields Map with fields and new values
      */
     void patchMemo(long id, Map<String, Object> fields);

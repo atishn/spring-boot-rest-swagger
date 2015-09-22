@@ -274,7 +274,7 @@ public class MemoControllerTest {
 
         MemoPage page = new MemoPage();
         page.setMemoList(list);
-        page.setTotalMemosSize(5);
+        page.setTotalMemosSize(5l);
 
 
         Mockito.when(daoClient.getMemosForPage(Matchers.anyInt(), Matchers.anyInt()))
